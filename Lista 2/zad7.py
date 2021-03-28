@@ -14,7 +14,6 @@ def set_plot_properties(title, ylabel):
     plt.xticks(rotation='vertical')
 
 
-
 def plot_model(x, y, beta, title):
 
     for i in range(len(y)):
@@ -66,71 +65,75 @@ def plot_return_linregress(x, y):
     return slope
 
 
-N = 38000000
-start = 46
+population_list = [144500000, 38000000, 1353000000]
+country_list = ['Russia', 'Poland', 'India']
+start = 76
 T = 340 - start
 dt = 1
 steps = int(T / dt)
 I_0 = 1
 gamma = 0.25
-country = 'Poland'
 
 data_confirmed = pd.read_csv("time_series_covid19_confirmed_global.csv")
 data_deaths = pd.read_csv("time_series_covid19_deaths_global.csv")
 data_recovered = pd.read_csv("time_series_covid19_recovered_global.csv")
 
-country_data_confirmed = data_confirmed.loc[data_confirmed['Country/Region'] == country].to_dict('list')
-country_data_deaths = data_deaths.loc[data_deaths['Country/Region'] == country].to_dict('list')
-country_data_recovered = data_recovered.loc[data_recovered['Country/Region'] == country].to_dict('list')
+for i in range(len(country_list)):
+    country = country_list[i]
+    N = population_list[i]
 
-x = []
-y1 = []
-x2 = []
-y2 = []
-x3 = []
-y3 = []
+    country_data_confirmed = data_confirmed.loc[data_confirmed['Country/Region'] == country].to_dict('list')
+    country_data_deaths = data_deaths.loc[data_deaths['Country/Region'] == country].to_dict('list')
+    country_data_recovered = data_recovered.loc[data_recovered['Country/Region'] == country].to_dict('list')
 
-for key, value in country_data_confirmed.items():
-    x.append(key)
-    y1.append(value[0])
+    x = []
+    y1 = []
+    x2 = []
+    y2 = []
+    x3 = []
+    y3 = []
 
-for value in country_data_deaths.values():
-    y2.append(value[0])
+    for key, value in country_data_confirmed.items():
+        x.append(key)
+        y1.append(value[0])
 
-for value in country_data_recovered.values():
-    y3.append(value[0])
+    for value in country_data_deaths.values():
+        y2.append(value[0])
 
-x = x[4:344]
-y1 = np.array(y1[4:])
-y2 = np.array(y2[4:])
-y3 = np.array(y3[4:])
-y = y1 - y2 - y3
+    for value in country_data_recovered.values():
+        y3.append(value[0])
 
-# Estymacja parametrów na podstawie danych z 8 marca - 9 kwietnia 2020
-x0 = x[43:79]
-y0 = y[43:79]
-x1 = x[46:54]
-y1 = y[46:54]
-x2 = x[57:66]
-y2 = y[57:66]
-x3 = x[71:79]
-y3 = y[71:79]
+    x = x[4:344]
+    y1 = np.array(y1[4:])
+    y2 = np.array(y2[4:])
+    y3 = np.array(y3[4:])
+    y = y1 - y2 - y3
 
-# Estymacja parametrów na podstawie danych z 10 - 30 kwietnia 2020
-# x0 = x[76:100]
-# y0 = y[76:100]
-# x1 = x[79:86]
-# y1 = y[79:86]
-# x2 = x[86:93]
-# y2 = y[86:93]
-# x3 = x[93:100]
-# y3 = y[93:100]
+    # Estymacja parametrów na podstawie danych z 8 marca - 9 kwietnia 2020
+    # x0 = x[43:79]
+    # y0 = y[43:79]
+    # x1 = x[46:54]
+    # y1 = y[46:54]
+    # x2 = x[57:66]
+    # y2 = y[57:66]
+    # x3 = x[71:79]
+    # y3 = y[71:79]
 
-alfa1, alfa2, alfa3 = plot_return_linregress([x0, x1, x2, x3], [y0, y1, y2, y3])
-beta = np.array([alfa1, alfa2, alfa3]) + gamma
+    # Estymacja parametrów na podstawie danych z 10 - 30 kwietnia 2020
+    x0 = x[76:100]
+    y0 = y[76:100]
+    x1 = x[79:86]
+    y1 = y[79:86]
+    x2 = x[86:93]
+    y2 = y[86:93]
+    x3 = x[93:100]
+    y3 = y[93:100]
 
-plot_model(dates.datestr2num(x[start:]),
-           [solve(SIR_ode, I_0, N, dt, steps, beta[0], gamma)[2],
-               solve(SIR_ode, I_0, N, dt, steps, beta[1], gamma)[2],
-               solve(SIR_ode, I_0, N, dt, steps, beta[2], gamma)[2]],
-           beta, "Prognoza zarażonych w " + f'{country}')
+    alfa1, alfa2, alfa3 = plot_return_linregress([x0, x1, x2, x3], [y0, y1, y2, y3])
+    beta = np.array([alfa1, alfa2, alfa3]) + gamma
+
+    plot_model(dates.datestr2num(x[start:]),
+               [solve(SIR_ode, I_0, N, dt, steps, beta[0], gamma)[2],
+                   solve(SIR_ode, I_0, N, dt, steps, beta[1], gamma)[2],
+                   solve(SIR_ode, I_0, N, dt, steps, beta[2], gamma)[2]],
+               beta, "Prognoza zarażonych w " + f'{country}')

@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def init_parameters(I0, N):
+def init_parameters(I0, N, T):
     Y = np.zeros((4, T))
     Y[2, 0] = I0
     Y[0, 0] = N - Y[2, 0]
@@ -18,24 +18,24 @@ def set_plot_properties(title):
     plt.show()
 
 
-def plot_model(y, title):
+def plot_model(y, title, dt):
     labels = ['$S_t$', '$E_t$', '$I_t$', '$R_t$']
 
     for i in range(len(y)):
         if np.mean(y[i]) != 0:
-            plt.plot(np.arange(0, len(y[i])), y[i], label=labels[i])
+            plt.plot(np.arange(0, len(y[i]) * dt, dt), y[i], label=labels[i])
     set_plot_properties(title + '\nSkala liniowa')
 
     for i in range(len(y)):
         if np.mean(y[i]) != 0:
-            plt.plot(np.arange(0, len(y[i])), y[i], label=labels[i])
+            plt.plot(np.arange(0, len(y[i]) * dt, dt), y[i], label=labels[i])
     plt.xscale("log")
     plt.yscale("log")
     set_plot_properties(title + '\nSkala logarytmiczna')
 
 
 def SIR(N, T, dt, gamma, beta, I0):
-    Y = init_parameters(I0, N)
+    Y = init_parameters(I0, N, T)
 
     for i in range(1, T):
         Y[0, i] = Y[0, i - 1] + dt * (-(beta / N) * Y[2, i - 1] * Y[0, i - 1])
@@ -46,7 +46,7 @@ def SIR(N, T, dt, gamma, beta, I0):
 
 
 def SI(N, T, dt, beta, I0):
-    Y = init_parameters(I0, N)
+    Y = init_parameters(I0, N, T)
 
     for i in range(1, T):
         Y[0, i] = Y[0, i - 1] + dt * (-(beta / N) * Y[2, i - 1] * Y[0, i - 1])
@@ -56,7 +56,7 @@ def SI(N, T, dt, beta, I0):
 
 
 def SIS(N, T, dt, gamma, beta, I0):
-    Y = init_parameters(I0, N)
+    Y = init_parameters(I0, N, T)
 
     for i in range(1, T):
         Y[0, i] = Y[0, i - 1] + dt * (-(beta / N) * Y[2, i - 1] * Y[0, i - 1] + gamma * Y[2, i - 1])
@@ -66,7 +66,7 @@ def SIS(N, T, dt, gamma, beta, I0):
 
 
 def SIRS(N, T, dt, gamma, beta, eta, I0):
-    Y = init_parameters(I0, N)
+    Y = init_parameters(I0, N, T)
 
     for i in range(1, T):
         Y[0, i] = Y[0, i - 1] + dt * (-(beta / N) * Y[2, i - 1] * Y[0, i - 1] + eta * Y[3, i - 1])
@@ -77,7 +77,7 @@ def SIRS(N, T, dt, gamma, beta, eta, I0):
 
 
 def SEIR(N, T, dt, gamma, beta, sigma, I0):
-    Y = init_parameters(I0, N)
+    Y = init_parameters(I0, N, T)
 
     for i in range(1, T):
         Y[0, i] = Y[0, i - 1] + dt * (-(beta / N) * Y[2, i - 1] * Y[0, i - 1])
@@ -89,7 +89,7 @@ def SEIR(N, T, dt, gamma, beta, sigma, I0):
 
 
 def SEIRS(N, T, dt, gamma, beta, sigma, I0):
-    Y = init_parameters(I0, N)
+    Y = init_parameters(I0, N, T)
 
     for i in range(1, T):
         Y[0, i] = Y[0, i - 1] + dt * (-(beta / N) * Y[2, i - 1] * Y[0, i - 1] + eta * Y[3, i - 1])
@@ -107,25 +107,26 @@ sigma = gamma
 N = 1000
 T = 100
 dt = 1
-x = np.arange(0, T, 1)
+steps = int(T / dt)
 I0 = 1
 
 
-# plot_model(SIR(N, T, dt, gamma, beta, I0), f'Ewolucja SIR dla N={N}, $I_0$={I0}, ' +
-#            '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' +'dt = ' + f'{dt}')
+# plot_model(SIR(N, steps, dt, gamma, beta, I0), f'Ewolucja SIR dla N={N}, $I_0$={I0}, ' +
+#            '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' +'dt = ' + f'{dt}', dt)
 #
-# plot_model(SI(N, T, dt, beta, I0), f'Ewolucja SI dla N={N}, $I_0$={I0}, ' +
-#            '$\\beta = ' + f'{beta}$, ' + 'dt = ' + f'{dt}')
+# plot_model(SI(N, steps, dt, beta, I0), f'Ewolucja SI dla N={N}, $I_0$={I0}, ' +
+#            '$\\beta = ' + f'{beta}$, ' + 'dt = ' + f'{dt}', dt)
 #
-# plot_model(SIS(N, T, dt, gamma, beta, I0), f'Ewolucja SIS dla N={N}, $I_0$={I0}, ' +
-#            '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' + 'dt = ' + f'{dt}')
+# plot_model(SIS(N, steps, dt, gamma, beta, I0), f'Ewolucja SIS dla N={N}, $I_0$={I0}, ' +
+#            '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' + 'dt = ' + f'{dt}', dt)
 #
-# plot_model(SIRS(N, T, dt, gamma, beta, eta, I0), f'Ewolucja SIRS dla N={N}, $I_0$={I0}, ' +
-#            '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$. ' + '$\\eta = ' + f'{eta}$, ' + 'dt = ' + f'{dt}')
+# plot_model(SIRS(N, steps, dt, gamma, beta, eta, I0), f'Ewolucja SIRS dla N={N}, $I_0$={I0}, ' +
+#            '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$. '
+#            + '$\\eta = ' + f'{eta}$, ' + 'dt = ' + f'{dt}', dt)
+#
+# plot_model(SEIR(N, steps, dt, gamma, beta, sigma, I0), f'Ewolucja SEIR dla N={N}, $I_0$={I0}, ' + '$\\beta = ' +
+#            f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' + '$\\sigma = ' + f'{sigma}$, ' + 'dt = ' + f'{dt}', dt)
 
-# plot_model(SEIR(N, T, dt, gamma, beta, sigma, I0), f'Ewolucja SEIR dla N={N}, $I_0$={I0}, ' + '$\\beta = ' +
-#            f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' + '$\\sigma = ' + f'{sigma}$, ' + 'dt = ' + f'{dt}')
-
-# plot_model(SEIRS(N, T, dt, gamma, beta, sigma, I0), f'Ewolucja SEIRS dla N={N}, $I_0$={I0}, ' +
-#            '$\\beta = ' + f'{beta}$ ' + '$\\gamma = ' + f'{gamma}$, ' + '$\\sigma = ' +
-#            f'{sigma}$ ' + '$\\eta = ' + f'{eta}$ ' + 'dt=' + f'{dt}')
+plot_model(SEIRS(N, steps, dt, gamma, beta, sigma, I0), f'Ewolucja SEIRS dla N={N}, $I_0$={I0}, ' +
+           '$\\beta = ' + f'{beta}$ ' + '$\\gamma = ' + f'{gamma}$, ' + '$\\sigma = ' +
+           f'{sigma}$ ' + '$\\eta = ' + f'{eta}$ ' + 'dt=' + f'{dt}', dt)
