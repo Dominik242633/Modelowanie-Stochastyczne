@@ -75,9 +75,9 @@ I_0 = 1
 gamma = 0.25
 country = 'Poland'
 
-data_confirmed = pd.read_csv("time_series_covid19_confirmed_global.csv")
-data_deaths = pd.read_csv("time_series_covid19_deaths_global.csv")
-data_recovered = pd.read_csv("time_series_covid19_recovered_global.csv")
+data_confirmed = pd.read_csv("confirmed.csv")
+data_deaths = pd.read_csv("deaths.csv")
+data_recovered = pd.read_csv("recovered.csv")
 
 country_data_confirmed = data_confirmed.loc[data_confirmed['Country/Region'] == country].to_dict('list')
 country_data_deaths = data_deaths.loc[data_deaths['Country/Region'] == country].to_dict('list')

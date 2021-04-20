@@ -1,37 +1,29 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from zad1 import euler_SI, euler_SIS, euler_SIRS, euler_SEIR, euler_SEIRS
+from zad2 import SI_ode, SIS_ode, SIRS_ode, SEIR_ode, SEIRS_ode, solve, plot_model
 
 
-def init_parameters(I0, N):
-    Y = np.zeros((4, T))
-    Y[2, 0] = I0
-    Y[0, 0] = N - Y[2, 0]
+def plot_different_dt(euler_func, ode_func, N, T, dt, gamma, beta, eta, I0, title):
+    euler_labels = ['$S_t$', '$E_t$', '$I_t$', '$R_t$']
+    ode_labels = ['$S_t^{DOPRI}$', '$E_t^{DOPRI}$', '$I_t^{DOPRI}$', '$R_t^{DOPRI}$']
 
-    return Y
+    ode_y = solve(ode_func, I0, N, 1, 100, beta, gamma, eta, sigma)
 
+    fig, axs = plt.subplots(2, 2, figsize=(8, 6))
+    fig.suptitle(title)
 
-def set_plot_properties(title):
-    plt.title(title)
-    plt.legend(loc='best', frameon=False)
-    plt.xlabel('Czas', fontdict={'size': 16})
-    plt.ylabel('Liczba przypadków', fontdict={'size': 16})
+    for j, ax in enumerate(axs.flat):
+        euler_y = euler_func(N, int(T / dt[j]), dt[j], gamma, beta, sigma, eta, I0)
+        for i in range(len(euler_y)):
+            if np.mean(euler_y[i]) != 0:
+                ax.plot(np.arange(0, len(euler_y[i]) * dt[j], dt[j]), euler_y[i], label=euler_labels[i])
+                ax.plot(np.arange(len(ode_y[i])), ode_y[i], label=ode_labels[i])
+                ax.set_title(f'dt = {dt[j]}')
+
+    plt.legend(loc='upper right', frameon=False, bbox_to_anchor=(1.4, 1.4))
+    fig.tight_layout()
     plt.show()
-
-
-def plot_model(y, title):
-    labels = ['$S_t$', '$E_t$', '$I_t$', '$R_t$']
-
-    for i in range(len(y)):
-        if np.mean(y[i]) != 0:
-            plt.plot(np.arange(0, len(y[i])), y[i], label=labels[i])
-    set_plot_properties(title + '\nSkala liniowa')
-
-    for i in range(len(y)):
-        if np.mean(y[i]) != 0:
-            plt.plot(np.arange(0, len(y[i])), y[i], label=labels[i])
-    plt.xscale("log")
-    plt.yscale("log")
-    set_plot_properties(title + '\nSkala logarytmiczna')
 
 
 beta = 0.5
@@ -39,33 +31,11 @@ gamma = 0.1
 eta = gamma
 sigma = gamma
 N = 1000
-T = 100 * N
-dt = 1
-I_0 = 1
+T = 100
+dt = [1, 0.1, 0.01, 0.001]
+# steps = int(T / dt)
+I0 = 1
 
-sS = np.zeros((T, 1))
-sE = np.zeros((T, 1))
-sI = np.zeros((T, 1))
-sR = np.zeros((T, 1))
-
-sI[0] = I_0
-sS[0] = N - I_0
-
-u1 = np.random.uniform(0, 1, (T, 1))
-u2 = np.random.uniform(0, 1, (T, 1))
-
-for i in range(T - 1):
-    if u1[i] < beta * sI[i] * sS[i] / N ** 2:
-        sS[i + 1] = sS[i] - 1
-        sI[i + 1] = sI[i] + 1
-    else:
-        sS[i + 1] = sS[i]
-        sI[i + 1] = sI[i]
-
-    if u2[i] < gamma * sI[i] / N:
-        sI[i + 1] = sI[i+1] - 1
-        sR[i + 1] = sR[i] + 1
-    else:
-        sR[i + 1] = sR[i]
-
-plot_model([sS, sE, sI, sR], "Stochastyczny SIR")
+plot_different_dt(euler_SI, SI_ode, N, T, dt, gamma, beta, eta, I0, 'Porównanie modelu SI dla różnych dt')
+plot_different_dt(euler_SIS, SIS_ode, N, T, dt, gamma, beta, eta, I0, 'Porównanie modelu SIS dla różnych dt')
+plot_different_dt(euler_SIRS, SIRS_ode, N, T, dt, gamma, beta, eta, I0, 'Porównanie modelu SIRS dla różnych dt')

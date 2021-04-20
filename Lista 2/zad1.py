@@ -34,10 +34,10 @@ def plot_model(y, title, dt):
     set_plot_properties(title + '\nSkala logarytmiczna')
 
 
-def SIR(N, T, dt, gamma, beta, I0):
-    Y = init_parameters(I0, N, T)
+def euler_SIR(N, steps, dt, gamma, beta, sigma, eta, I0):
+    Y = init_parameters(I0, N, steps)
 
-    for i in range(1, T):
+    for i in range(1, steps):
         Y[0, i] = Y[0, i - 1] + dt * (-(beta / N) * Y[2, i - 1] * Y[0, i - 1])
         Y[2, i] = Y[2, i - 1] + dt * ((beta / N) * Y[2, i - 1] * Y[0, i - 1] - gamma * Y[2, i - 1])
         Y[3, i] = Y[3, i - 1] + dt * (gamma * Y[2, i - 1])
@@ -45,30 +45,30 @@ def SIR(N, T, dt, gamma, beta, I0):
     return Y
 
 
-def SI(N, T, dt, beta, I0):
-    Y = init_parameters(I0, N, T)
+def euler_SI(N, steps, dt, gamma, beta, sigma, eta, I0):
+    Y = init_parameters(I0, N, steps)
 
-    for i in range(1, T):
+    for i in range(1, steps):
         Y[0, i] = Y[0, i - 1] + dt * (-(beta / N) * Y[2, i - 1] * Y[0, i - 1])
         Y[2, i] = Y[2, i - 1] + dt * ((beta / N) * Y[2, i - 1] * Y[0, i - 1])
 
     return Y
 
 
-def SIS(N, T, dt, gamma, beta, I0):
-    Y = init_parameters(I0, N, T)
+def euler_SIS(N, steps, dt, gamma, beta, sigma, eta, I0):
+    Y = init_parameters(I0, N, steps)
 
-    for i in range(1, T):
+    for i in range(1, steps):
         Y[0, i] = Y[0, i - 1] + dt * (-(beta / N) * Y[2, i - 1] * Y[0, i - 1] + gamma * Y[2, i - 1])
         Y[2, i] = Y[2, i - 1] + dt * ((beta / N) * Y[2, i - 1] * Y[0, i - 1] - gamma * Y[2, i - 1])
 
     return Y
 
 
-def SIRS(N, T, dt, gamma, beta, eta, I0):
-    Y = init_parameters(I0, N, T)
+def euler_SIRS(N, steps, dt, gamma, beta, sigma, eta, I0):
+    Y = init_parameters(I0, N, steps)
 
-    for i in range(1, T):
+    for i in range(1, steps):
         Y[0, i] = Y[0, i - 1] + dt * (-(beta / N) * Y[2, i - 1] * Y[0, i - 1] + eta * Y[3, i - 1])
         Y[2, i] = Y[2, i - 1] + dt * ((beta / N) * Y[2, i - 1] * Y[0, i - 1] - gamma * Y[2, i - 1])
         Y[3, i] = Y[3, i - 1] + dt * (gamma * Y[2, i - 1] - eta * Y[3, i - 1])
@@ -76,10 +76,10 @@ def SIRS(N, T, dt, gamma, beta, eta, I0):
     return Y
 
 
-def SEIR(N, T, dt, gamma, beta, sigma, I0):
-    Y = init_parameters(I0, N, T)
+def euler_SEIR(N, steps, dt, gamma, beta, sigma, eta, I0):
+    Y = init_parameters(I0, N, steps)
 
-    for i in range(1, T):
+    for i in range(1, steps):
         Y[0, i] = Y[0, i - 1] + dt * (-(beta / N) * Y[2, i - 1] * Y[0, i - 1])
         Y[1, i] = Y[1, i - 1] + dt * ((beta / N) * Y[2, i - 1] * Y[0, i - 1] - sigma * Y[1, i - 1])
         Y[2, i] = Y[2, i - 1] + dt * (sigma * Y[1, i - 1] - gamma * Y[2, i - 1])
@@ -88,10 +88,10 @@ def SEIR(N, T, dt, gamma, beta, sigma, I0):
     return Y
 
 
-def SEIRS(N, T, dt, gamma, beta, sigma, I0):
-    Y = init_parameters(I0, N, T)
+def euler_SEIRS(N, steps, dt, gamma, beta, sigma, eta, I0):
+    Y = init_parameters(I0, N, steps)
 
-    for i in range(1, T):
+    for i in range(1, steps):
         Y[0, i] = Y[0, i - 1] + dt * (-(beta / N) * Y[2, i - 1] * Y[0, i - 1] + eta * Y[3, i - 1])
         Y[1, i] = Y[1, i - 1] + dt * ((beta / N) * Y[2, i - 1] * Y[0, i - 1] - sigma * Y[1, i - 1])
         Y[2, i] = Y[2, i - 1] + dt * (sigma * Y[1, i - 1] - gamma * Y[2, i - 1])
@@ -100,33 +100,33 @@ def SEIRS(N, T, dt, gamma, beta, sigma, I0):
     return Y
 
 
-beta = 0.5
-gamma = 0.1
-eta = gamma
-sigma = gamma
-N = 1000
-T = 100
-dt = 1
-steps = int(T / dt)
-I0 = 1
+if __name__ == '__main__':
+    beta = 0.5
+    gamma = 0.1
+    eta = gamma
+    sigma = gamma
+    N = 1000
+    T = 100
+    dt = 1
+    steps = int(T / dt)
+    I0 = 1
 
+    plot_model(euler_SIR(N, steps, dt, gamma, beta, sigma, eta, I0), f'Ewolucja SIR dla N={N}, $I_0$={I0}, ' +
+               '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' +'dt = ' + f'{dt}', dt)
 
-# plot_model(SIR(N, steps, dt, gamma, beta, I0), f'Ewolucja SIR dla N={N}, $I_0$={I0}, ' +
-#            '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' +'dt = ' + f'{dt}', dt)
-#
-# plot_model(SI(N, steps, dt, beta, I0), f'Ewolucja SI dla N={N}, $I_0$={I0}, ' +
-#            '$\\beta = ' + f'{beta}$, ' + 'dt = ' + f'{dt}', dt)
-#
-# plot_model(SIS(N, steps, dt, gamma, beta, I0), f'Ewolucja SIS dla N={N}, $I_0$={I0}, ' +
-#            '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' + 'dt = ' + f'{dt}', dt)
-#
-# plot_model(SIRS(N, steps, dt, gamma, beta, eta, I0), f'Ewolucja SIRS dla N={N}, $I_0$={I0}, ' +
-#            '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$. '
-#            + '$\\eta = ' + f'{eta}$, ' + 'dt = ' + f'{dt}', dt)
-#
-# plot_model(SEIR(N, steps, dt, gamma, beta, sigma, I0), f'Ewolucja SEIR dla N={N}, $I_0$={I0}, ' + '$\\beta = ' +
-#            f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' + '$\\sigma = ' + f'{sigma}$, ' + 'dt = ' + f'{dt}', dt)
+    plot_model(euler_SI(N, steps, dt, gamma, beta, sigma, eta, I0), f'Ewolucja SI dla N={N}, $I_0$={I0}, ' +
+               '$\\beta = ' + f'{beta}$, ' + 'dt = ' + f'{dt}', dt)
 
-plot_model(SEIRS(N, steps, dt, gamma, beta, sigma, I0), f'Ewolucja SEIRS dla N={N}, $I_0$={I0}, ' +
-           '$\\beta = ' + f'{beta}$ ' + '$\\gamma = ' + f'{gamma}$, ' + '$\\sigma = ' +
-           f'{sigma}$ ' + '$\\eta = ' + f'{eta}$ ' + 'dt=' + f'{dt}', dt)
+    plot_model(euler_SIS(N, steps, dt, gamma, beta, sigma, eta, I0), f'Ewolucja SIS dla N={N}, $I_0$={I0}, ' +
+               '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' + 'dt = ' + f'{dt}', dt)
+
+    plot_model(euler_SIRS(N, steps, dt, gamma, beta, sigma, eta, I0), f'Ewolucja SIRS dla N={N}, $I_0$={I0}, ' +
+               '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$. '
+               + '$\\eta = ' + f'{eta}$, ' + 'dt = ' + f'{dt}', dt)
+
+    plot_model(euler_SEIR(N, steps, dt, gamma, beta, sigma, eta, I0), f'Ewolucja SEIR dla N={N}, $I_0$={I0}, ' + '$\\beta = ' +
+               f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' + '$\\sigma = ' + f'{sigma}$, ' + 'dt = ' + f'{dt}', dt)
+
+    plot_model(euler_SEIRS(N, steps, dt, gamma, beta, sigma, eta, I0), f'Ewolucja SEIRS dla N={N}, $I_0$={I0}, ' +
+               '$\\beta = ' + f'{beta}$ ' + '$\\gamma = ' + f'{gamma}$, ' + '$\\sigma = ' +
+               f'{sigma}$ ' + '$\\eta = ' + f'{eta}$ ' + 'dt=' + f'{dt}', dt)

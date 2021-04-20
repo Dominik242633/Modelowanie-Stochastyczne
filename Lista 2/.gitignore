@@ -1,8 +1,6 @@
 .idea
 __pycache__
-time_series_covid19_confirmed_global.csv
-time_series_covid19_confirmed_US.csv
-time_series_covid19_deaths_global.csv
-time_series_covid19_deaths_US.csv
-time_series_covid19_recovered_global.csv
-time_series_covid19_recovered_US.csv
+confirmed.csv
+deaths.csv
+recovered.csv
+TODO.txt
