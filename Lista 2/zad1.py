@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+plt.style.use('ggplot')
 
 def init_parameters(I0, N, T):
     Y = np.zeros((4, T))

@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from zad1 import euler_SI, euler_SIS, euler_SIRS, euler_SEIR, euler_SEIRS
-from zad2 import SI_ode, SIS_ode, SIRS_ode, SEIR_ode, SEIRS_ode, solve, plot_model
+from zad1 import euler_SI, euler_SIS, euler_SIRS
+from zad2 import SI_ode, SIS_ode, SIRS_ode, solve
+plt.style.use('ggplot')
 
 
 def plot_different_dt(euler_func, ode_func, N, T, dt, gamma, beta, eta, I0, title):

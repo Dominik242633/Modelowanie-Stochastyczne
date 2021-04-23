@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.integrate import RK45
 import matplotlib.pyplot as plt
+plt.style.use('ggplot')
 
 
 def set_plot_properties(title):
@@ -107,22 +108,22 @@ if __name__ == '__main__':
     steps = int(T / dt)
     I_0 = 1
 
-    # plot_model(solve(SIR_ode, I_0, N, dt, steps, beta, gamma, eta, sigma), f'Ewolucja SIR dla N={N}, $I_0$={I_0}, ' +
-    #            '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' + 'dt = ' + f'{dt}')
+    plot_model(solve(SIR_ode, I_0, N, dt, steps, beta, gamma, eta, sigma), f'Ewolucja SIR dla N={N}, $I_0$={I_0}, ' +
+               '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' + 'dt = ' + f'{dt}')
 
-    # plot_model(solve(SI_ode, I_0, N, dt, steps, beta, gamma, eta, sigma), f'Ewolucja SI dla N={N}, $I_0$={I_0}, ' +
-    #            '$\\beta = ' + f'{beta}$, ' + 'dt = ' + f'{dt}')
+    plot_model(solve(SI_ode, I_0, N, dt, steps, beta, gamma, eta, sigma), f'Ewolucja SI dla N={N}, $I_0$={I_0}, ' +
+               '$\\beta = ' + f'{beta}$, ' + 'dt = ' + f'{dt}')
 
-    # plot_model(solve(SIS_ode, I_0, N, dt, steps, beta, gamma, eta, sigma), f'Ewolucja SIS dla N={N}, $I_0$={I_0}, ' +
-    #            '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' + 'dt = ' + f'{dt}')
-    #
-    # plot_model(solve(SIRS_ode, I_0, N, dt, steps, beta, gamma, eta, sigma), f'Ewolucja SIRS dla N={N}, $I_0$={I_0}, ' +
-    #            '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' + '$\\eta = ' + f'{eta}$, ' + 'dt = ' + f'{dt}')
+    plot_model(solve(SIS_ode, I_0, N, dt, steps, beta, gamma, eta, sigma), f'Ewolucja SIS dla N={N}, $I_0$={I_0}, ' +
+               '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' + 'dt = ' + f'{dt}')
 
-    # plot_model(solve(SEIR_ode, I_0, N, dt, steps, beta, gamma, eta, sigma), f'Ewolucja SEIR dla N={N}, $I_0$={I_0}, ' +
-               # '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' + '$\\sigma = ' + f'{sigma}$, ' + 'dt = ' + f'{dt}')
+    plot_model(solve(SIRS_ode, I_0, N, dt, steps, beta, gamma, eta, sigma), f'Ewolucja SIRS dla N={N}, $I_0$={I_0}, ' +
+               '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' + '$\\eta = ' + f'{eta}$, ' + 'dt = ' + f'{dt}')
 
-    # plot_model(solve(SEIRS_ode, I_0, N, dt, steps, beta, gamma, eta, sigma), f'Ewolucja SEIRS dla N={N}, $I_0$={I_0}, ' +
-    #            '$\\beta = ' + f'{beta}$ ' + '$\\gamma = ' + f'{gamma}$, ' + '$\\sigma = ' +
-    #            f'{sigma}$ ' + '$\\eta = ' + f'{eta}$ ' + 'dt=' + f'{dt}')
+    plot_model(solve(SEIR_ode, I_0, N, dt, steps, beta, gamma, eta, sigma), f'Ewolucja SEIR dla N={N}, $I_0$={I_0}, ' +
+               '$\\beta = ' + f'{beta}$, ' + '$\\gamma = ' + f'{gamma}$, ' + '$\\sigma = ' + f'{sigma}$, ' + 'dt = ' + f'{dt}')
+
+    plot_model(solve(SEIRS_ode, I_0, N, dt, steps, beta, gamma, eta, sigma), f'Ewolucja SEIRS dla N={N}, $I_0$={I_0}, ' +
+               '$\\beta = ' + f'{beta}$ ' + '$\\gamma = ' + f'{gamma}$, ' + '$\\sigma = ' +
+               f'{sigma}$ ' + '$\\eta = ' + f'{eta}$ ' + 'dt=' + f'{dt}')
 

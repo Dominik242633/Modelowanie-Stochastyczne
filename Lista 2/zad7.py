@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from zad5 import stochastic_SIR, stochastic_SI, stochastic_SIS, stochastic_SIRS, stochastic_SEIR, stochastic_SEIRS, init_parameters
+from zad5 import stochastic_SIR, stochastic_SI, stochastic_SIS, stochastic_SIRS, \
+    stochastic_SEIR, stochastic_SEIRS, init_parameters
+plt.style.use('ggplot')
 
 
 beta = 0.5

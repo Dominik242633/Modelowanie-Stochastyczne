@@ -3,9 +3,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as dates
 from scipy import stats
+plt.style.use('ggplot')
 
 
-population_list = [144500000, 38000000, 1353000000]
+population_list = [144400000, 83020000, 1366000000]
 country_list = ['Russia', 'Germany', 'India']
 gamma = 0.25
 start_number = 42

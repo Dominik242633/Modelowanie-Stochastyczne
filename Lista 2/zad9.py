@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as dates
 from scipy import stats
+plt.style.use('ggplot')
 
 
 N = 38000000

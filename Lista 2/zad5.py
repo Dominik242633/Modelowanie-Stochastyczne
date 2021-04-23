@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+plt.style.use('ggplot')
 
 
 def init_parameters(N, T, I_0):
@@ -199,12 +200,12 @@ I_0 = 1
 if __name__ == '__main__':
     plot_model(stochastic_SIR(init_parameters(N, T, I_0), beta, gamma, eta, sigma), "Stochastyczny SIR", N)
 
-    # plot_model(stochastic_SI(init_parameters(N, T, I_0), beta, gamma, eta, sigma), "Stochastyczny SI", N)
+    plot_model(stochastic_SI(init_parameters(N, T, I_0), beta, gamma, eta, sigma), "Stochastyczny SI", N)
 
-    # plot_model(stochastic_SIS(init_parameters(N, T, I_0), beta, gamma, eta, sigma), "Stochastyczny SIS", N)
+    plot_model(stochastic_SIS(init_parameters(N, T, I_0), beta, gamma, eta, sigma), "Stochastyczny SIS", N)
 
-    # plot_model(stochastic_SIRS(init_parameters(N, T, I_0), beta, gamma, eta, sigma), "Stochastyczny SIRS", N)
+    plot_model(stochastic_SIRS(init_parameters(N, T, I_0), beta, gamma, eta, sigma), "Stochastyczny SIRS", N)
 
-    # plot_model(stochastic_SEIR(init_parameters(N, T, I_0), beta, gamma, eta, sigma), "Stochastyczny SEIR", N)
+    plot_model(stochastic_SEIR(init_parameters(N, T, I_0), beta, gamma, eta, sigma), "Stochastyczny SEIR", N)
 
-    # plot_model(stochastic_SEIRS(init_parameters(N, T, I_0), beta, gamma, eta, sigma), "Stochastyczny SEIRS", N)
+    plot_model(stochastic_SEIRS(init_parameters(N, T, I_0), beta, gamma, eta, sigma), "Stochastyczny SEIRS", N)
