@@ -6,7 +6,6 @@ from scipy import stats
 plt.style.use('ggplot')
 
 
-population_list = [144400000, 83020000, 1366000000]
 country_list = ['Russia', 'Germany', 'India']
 gamma = 0.25
 start_number = 42
@@ -17,40 +16,21 @@ data_recovered = pd.read_csv("recovered.csv")
 
 for i in range(len(country_list)):
     country = country_list[i]
-    N = population_list[i]
 
-    country_data_confirmed = data_confirmed.loc[data_confirmed['Country/Region'] == country].to_dict('list')
-    country_data_deaths = data_deaths.loc[data_deaths['Country/Region'] == country].to_dict('list')
-    country_data_recovered = data_recovered.loc[data_recovered['Country/Region'] == country].to_dict('list')
+    country_data_confirmed = np.array(data_confirmed.loc[data_confirmed['Country/Region'] == country].values.tolist()[0][4:])
+    country_data_deaths = np.array(data_deaths.loc[data_deaths['Country/Region'] == country].values.tolist()[0][4:])
+    country_data_recovered = np.array(data_recovered.loc[data_recovered['Country/Region'] == country].values.tolist()[0][4:])
 
-    x = []
-    y1 = []
-    y2 = []
-    y3 = []
+    x = list(data_confirmed)[4:]
+    y = country_data_confirmed - country_data_deaths - country_data_recovered
 
-    for key, value in country_data_confirmed.items():
-        x.append(key)
-        y1.append(value[0])
+    R0 = np.zeros(len(x) - start_number)
 
-    for value in country_data_deaths.values():
-        y2.append(value[0])
-
-    for value in country_data_recovered.values():
-        y3.append(value[0])
-
-    x = x[4:]
-    y1 = np.array(y1[4:])
-    y2 = np.array(y2[4:])
-    y3 = np.array(y3[4:])
-    y = y1 - y2 - y3
-
-    R0 = np.zeros(len(x) - 1 - start_number)
-
-    for j in range(start_number, len(x) - 1):
+    for j in range(start_number, len(x)):
         alfa, intercept, r, p, std_err = stats.linregress(np.arange(0, len(x[j - 7:j])), np.log(y[j - 7:j]))
         R0[j - start_number] = (alfa / gamma) + 1
 
-    plt.plot_date(dates.datestr2num(x[start_number:len(x) - 1]), R0, '-', label='$R_0$')
+    plt.plot_date(dates.datestr2num(x[start_number:len(x)]), R0, '-', label='$R_0$')
     plt.title(f'Estymacja $R_0$ - {country}')
     plt.legend(loc='best', frameon=False)
     plt.xlabel('Czas', fontdict={'size': 30})
