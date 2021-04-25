@@ -82,14 +82,14 @@ def stochastic_SIS(parameters, beta, gamma, eta, sigma):
 
     for i in range(T - 1):
         # S -> I
-        if u1[i] < (((beta * sI[i] * sS[i]) / N ** 2) - ((gamma * sI[i]) / N)):
+        if u1[i] < ((beta * sI[i] * sS[i]) / N ** 2):
             sS[i + 1] = sS[i] - 1
             sI[i + 1] = sI[i] + 1
         else:
             sS[i + 1] = sS[i]
             sI[i + 1] = sI[i]
         # I -> S
-        if u2[i] < -(((beta * sI[i] * sS[i]) / N ** 2) - ((gamma * sI[i]) / N)):
+        if u2[i] < ((gamma * sI[i]) / N):
             sI[i + 1] = sI[i + 1] - 1
             sS[i + 1] = sS[i + 1] + 1
 
