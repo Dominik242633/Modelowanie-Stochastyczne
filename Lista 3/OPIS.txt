@@ -1,0 +1,23 @@
+Pliki:
+    christof
+    dmtest
+    epf_arx
+    forecast
+    holtwinters
+zawierają funkcje pomocnicze, wykorzystywane w pozostałych skryptach. W pliku christof znajduje się definicja funkcji christof do testowania pokrycia. Plik dmtest zawiera funkcję dmtest implementującą test Diebolda-Mariano na seriach błędów prognoz. Plik holtwinters dostarcza funkcję holtwinters analogiczną do tej ze slajdów. W pliku epf_arx zamieszczone zostały dwie funkcje: epf_arx do generowania prognoz (naiwnej, ARX i NARX) oraz funkcję pomocniczą task, wykorzystywaną przez wariant wielowątkowy modelu NARX (opisany niżej). Plik forecast dostarcza funkcje forecast_arx, forecast_naive i forecast_narx, zwracające prognozy pojedynczego modelu (na jedną godzinę).
+
+Pliki:
+    arx_impl
+    DM_tester
+    hw_impl
+dostarczają przykładowe wywołania, odwzorowujące niektóre z wyników zaprezentowanych na wykładzie. Aby poprawnie wykonać skrypt DM_tester należy najpierw wygenerować prognozy: naiwną (skrypt arx_impl z odpowiednim parametrem) i hw_impl, zapisują one wyniki swojego działania tak, aby mogły one zostać wczytane w skrypcie DM_tester. W pliku arx_impl użytkownik może również wybrać typ prognozy spośród: naive, arx, narx, narx_mc. Prognozy narx oraz narx_mc wymagają znacząco zwiększonych nakładów obliczeniowych (sięgających godzin zamiast sekund). narx_mc przygotowany został w oparciu o bibliotekę multiprocessing (niewymagającą ręcznej instalacji) - oblicza on prognozy równolegle dla różnych godzin - wykonanie odbywa się na kilku rdzeniach/wątkach procesora. Ilość potoków obliczeniowych kontrolowana jest parametrem przekazanym do kostruktora Pool(), np. Pool(2). Domyślnie jest to ilość procesorów logicznych w systemie.
+
+Minimalny zestaw pakietów Pythona wymaganych do uruchomienia przykładów (oprócz modelu NARX):
+    numpy
+    scipy
+Wywołanie sieci neuronowych wymaga dodatkowo pakietów:
+    keras
+    theano albo tensorflow
+theano oraz tensorflow to tzw. backendy do pakietu keras - to przy ich pomocy odbywa się całość obliczeń przy estymacji parametrów i prognozowaniu. Obie opcje powinny zwrócić zbliżone wyniki. Wybierając pakiet tensorflow, najlepiej zainstalować (znacznie mniejszą) odmianę tensorflow-cpu, która nie dostarcza implementacji potrzebnych do uruchamiania modeli na karcie graficznej - w tym przypadku i tak problem jest na tyle niewielki, że obliczenia na karcie graficznej byłyby znacznie wolniejsze. Osobiście polecam jednak wybrać theano, gdyż tensorflow ma wiele wersji i często kod nie jest kompatybilny pomiędzy nimi. Dla chcących instalować tensorflow mogę polecić wersję 1.14 zamiast nowych wydań 2.x.
+
+Parametry sieci neuronowej zostały dobrane tak, aby oferować prognozy o zbliżonej dokładności do modelu ARX na zbiorze GEFCom. Możliwe jest znaczące poprawienie tego wyboru, jednak jest to proces bardzo czasochłonny. Sieć NARX powinna działać ok. 3-6h, czas działania narx_mc bardzo zależy od mocy procesora.
