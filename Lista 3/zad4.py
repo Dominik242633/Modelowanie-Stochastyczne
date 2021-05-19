@@ -37,15 +37,17 @@ if __name__ == "__main__":
     print_rate(y_naive_prediction, actual[360 * 24:], "Naive method")
     plot_prognosis(y_naive_prediction, actual, "Naive method")
 
-    hour = 8
-    hw_prediction = hw_method(data[hour::24, 2])
+    hw_prediction = np.zeros((data.shape))
+
+    for hour in range(24):
+        hw_prediction[360*24+hour::24, 2] = hw_method(data[hour::24, 2])
 
     plt.plot(np.arange(0, len(actual), 1), actual, label='actual')
-    plt.plot(np.arange(361*24, len(hw_prediction)*24 + 361*24, 24), hw_prediction, label='prediction')
+    plt.plot(np.arange(360*24, hw_prediction.shape[0], 1), hw_prediction[360*24:, 2], label='prediction')
     plt.title('Predykcja metodą Holta-Wintersa')
     plt.xlabel('Czas')
     plt.ylabel('Wartość')
     plt.legend(loc='best', frameon=False)
     plt.show()
 
-    print_rate(hw_prediction, data[hour::24, 2][360:], "Holt-Winters method")
+    print_rate(hw_prediction[360*24:, 2], data[360*24:, 2], "Holt-Winters method")

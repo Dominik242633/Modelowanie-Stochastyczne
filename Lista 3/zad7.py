@@ -6,12 +6,8 @@ plt.style.use('ggplot')
 
 
 def predict(actual_data, startd=0, endd=360, Ndays=722):
-    res = []
-    for i in range(Ndays):
-        res = res + list(epf_arx(actual_data[:, :4], 1, startd, endd, 'arx')[:, 3])
-        startd += 1
-        endd += 1
-    return res
+    result = epf_arx(actual_data[:, :4], Ndays, startd, endd, 'arx', 'rolled')[:, 3]
+    return result
 
 
 if __name__ == "__main__":

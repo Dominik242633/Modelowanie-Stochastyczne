@@ -13,7 +13,7 @@ def task(argtup):
     print(f'{j}\t{hour}\t{t() - ts}')
     return task_output 
 
-def epf_arx(data, Ndays, startd, endd, forecast_type='naive'):
+def epf_arx(data, Ndays, startd, endd, forecast_type='naive', forecast_window='rolled'):
     if forecast_type.lower() == 'narx':      # forecst_narx imports additional libraries, importing
         from forecast import forecast_narx   # here ensures that they are not needed for ARX or naive
     elif forecast_type.lower() == 'narx_mc': # multi-core variant
@@ -51,7 +51,12 @@ def epf_arx(data, Ndays, startd, endd, forecast_type='naive'):
                 result[j * 24 + hour, 3] = forecast_narx(data_h[startd + j:endd + j + 1, :])
                 print(f'{j}\t{hour}\t{t() - ts}')
             elif forecast_type.lower() == 'arx':
-                result[j * 24 + hour, 3] = forecast_arx(data_h[startd + j:endd + j + 1, :])
+                if forecast_window == 'rolled':
+                    result[j * 24 + hour, 3] = forecast_arx(data_h[startd + j:endd + j + 1, :])
+                elif forecast_window == 'expanded':
+                    result[j * 24 + hour, 3] = forecast_arx(data_h[startd:endd + j + 1, :])
+                elif forecast_window == 'constant':
+                    result[j * 24 + hour, 3] = forecast_arx(data_h[startd:endd + 1, :])
             elif forecast_type.lower() == 'naive':
                 result[j * 24 + hour, 3] = forecast_naive(data_h[startd + j:endd + j + 1, :])
 

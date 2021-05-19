@@ -21,8 +21,8 @@ def plot_prognosis(prediction, actual_data, title):
 
 
 def predict(actual_data, startd=0, endd=360, Ndays=722):
-    result = epf_arx(actual_data[:, :4], Ndays, startd, endd, 'arx')
-    return result[:, 3]
+    result = epf_arx(actual_data[:, :4], Ndays, startd, endd, 'arx', 'constant')[:, 3]
+    return result
 
 
 if __name__ == "__main__":
