@@ -1,6 +1,6 @@
 import numpy as np
 
-def forecast_arx(DATA):
+def forecast_arx(DATA, forecast_window='rolled'):
     # DATA: 8-column matrix (date, hour, price, load forecast, Sat, Sun, Mon dummy, p_min)
     # Select data to be used
     # print(DATA[-1, :])
@@ -17,12 +17,19 @@ def forecast_arx(DATA):
     price_min -= np.mean(price_min)  # Remove mean(price)
     loadr = np.log(loadr)
 
-    # Calibrate the ARX model
-    y = price[7:]                    # For day d, d-1, ...
+    if forecast_window == 'constant':
+        y = price[7:360]
+    else:
+        # Calibrate the ARX model
+        y = price[7:]                    # For day d, d-1, ...
     # Define explanatory variables for calibration
     # without intercept
-    X = np.vstack([price[6:-1], price[5:-2], price[:-7], price_min[6:-1],
-                   loadr[6:-1], Dummies[6:-1, 0], Dummies[6:-1, 1], Dummies[6:-1, 2]]).T
+    if forecast_window == 'constant':
+        X = np.vstack([price[6:359], price[5:358], price[:353], price_min[6:359],
+                       loadr[6:359], Dummies[6:359, 0], Dummies[6:359, 1], Dummies[6:359, 2]]).T
+    else:
+        X = np.vstack([price[6:-1], price[5:-2], price[:-7], price_min[6:-1],
+                       loadr[6:-1], Dummies[6:-1, 0], Dummies[6:-1, 1], Dummies[6:-1, 2]]).T
     # with intercept
     # X = np.vstack([np.ones(len(y)), price[6:-1], price[5:-2], price[:-7], price_min[6:-1],
     #                loadr[6:-1], Dummies[6:-1, 0], Dummies[6:-1, 1], Dummies[6:-1, 2]]).T

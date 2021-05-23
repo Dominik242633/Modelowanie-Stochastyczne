@@ -52,11 +52,11 @@ def epf_arx(data, Ndays, startd, endd, forecast_type='naive', forecast_window='r
                 print(f'{j}\t{hour}\t{t() - ts}')
             elif forecast_type.lower() == 'arx':
                 if forecast_window == 'rolled':
-                    result[j * 24 + hour, 3] = forecast_arx(data_h[startd + j:endd + j + 1, :])
+                    result[j * 24 + hour, 3] = forecast_arx(data_h[startd + j:endd + j + 1, :], 'rolled')
                 elif forecast_window == 'expanded':
-                    result[j * 24 + hour, 3] = forecast_arx(data_h[startd:endd + j + 1, :])
+                    result[j * 24 + hour, 3] = forecast_arx(data_h[startd:endd + j + 1, :], 'expanded')
                 elif forecast_window == 'constant':
-                    result[j * 24 + hour, 3] = forecast_arx(data_h[startd:endd + 1, :])
+                    result[j * 24 + hour, 3] = forecast_arx(data_h[startd:endd + j + 1, :], 'constant')
             elif forecast_type.lower() == 'naive':
                 result[j * 24 + hour, 3] = forecast_naive(data_h[startd + j:endd + j + 1, :])
 

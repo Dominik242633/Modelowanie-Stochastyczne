@@ -1,6 +1,7 @@
 import numpy as np
 from dmtest import dmtest
 from scipy.stats import norm
+from datetime import datetime
 import matplotlib.pyplot as plt
 import zad4
 import zad5
@@ -9,9 +10,13 @@ import zad7
 
 
 def get_prognosis():
-    data = np.loadtxt('GEFCOM.txt')
+    data = np.loadtxt('NPdata_2013-2016.txt')
 
     actual = data[360*24:, 2]
+
+    weekday = np.array([datetime.strptime(str(int(data[i, 0])), "%Y%m%d").weekday() + 1 for i in range(data.shape[0])])
+    weekday = np.reshape(weekday, (weekday.shape[0], 1))
+    data = np.hstack((data, weekday))
 
     naive_method_err = actual - np.array(zad4.naive_prediction(data))
 
@@ -20,9 +25,9 @@ def get_prognosis():
         hw_prediction[360*24+hour::24, 2] = zad4.hw_method(data[hour::24, 2])
     hw_method_err = actual - hw_prediction[360*24:, 2]
 
-    const_arx_err = actual - np.array(zad5.predict(data))
-    expanded_arx_err = actual - np.array(zad6.predict(data))
-    rolled_arx_err = actual - np.array(zad7.predict(data))
+    const_arx_err = actual - np.array(zad5.predict(data, Ndays=776))
+    expanded_arx_err = actual - np.array(zad6.predict(data, Ndays=776))
+    rolled_arx_err = actual - np.array(zad7.predict(data, Ndays=776))
 
     errors = [naive_method_err,
               hw_method_err,
@@ -58,7 +63,7 @@ if __name__ == "__main__":
     errors_day = errors_hour.copy()
 
     errors_hour = [prognosis_error[8::24] for prognosis_error in errors_hour]
-    errors_day = [[np.mean(prognosis_error[i*24:i*24+24]) for i in range(722)] for prognosis_error in errors_day]
+    errors_day = [[np.mean(prognosis_error[i*24:i*24+24]) for i in range(776)] for prognosis_error in errors_day]
 
     pvals = np.zeros((5, 5))
 

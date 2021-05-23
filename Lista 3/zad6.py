@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from epf_arx import epf_arx
-from zad5 import print_rate, plot_prognosis
+from zad5 import print_rate, plot_prognosis, plot_score
 plt.style.use('ggplot')
 
 
@@ -19,3 +19,5 @@ if __name__ == "__main__":
     print_rate(predicted, actual[360*24:], "ARX - rozszerzane okno kalibracji")
 
     plot_prognosis(predicted, actual, 'dla rozszerzanego okna kalibracji')
+
+    plot_score(predicted, actual[360*24:], 'ARX z rozszerzanym oknem')

@@ -2,17 +2,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 from holtwinters import holtwinters
 from scipy.optimize import minimize
-from zad5 import print_rate, plot_prognosis
+from zad5 import print_rate, plot_prognosis, plot_score
 plt.style.use('ggplot')
 
 
 def naive_prediction(actual):
     prediction = []
-    for i in range(360*24, len(actual)):
-        if actual[-1] in [1, 6, 7]:
-            prediction.append(actual[i-7*24])
+    for i in range(360*24, actual.shape[0]):
+        if actual[i, -1] in [1, 6, 7]:
+            prediction.append(actual[i-7*24, 2])
         else:
-            prediction.append(actual[i-24])
+            prediction.append(actual[i-24, 2])
 
     return prediction
 
@@ -31,23 +31,18 @@ if __name__ == "__main__":
     file_name = "GEFCOM.txt"
     data = np.loadtxt(file_name)
 
-    actual = np.array([i[2] for i in data[:]])
-    y_naive_prediction = np.array(naive_prediction(actual))
+    actual = data[:, 2]
+    y_naive_prediction = np.array(naive_prediction(data))
 
     print_rate(y_naive_prediction, actual[360 * 24:], "Naive method")
     plot_prognosis(y_naive_prediction, actual, "Naive method")
+    plot_score(y_naive_prediction, actual[360 * 24:], 'metody naiwnej')
 
-    hw_prediction = np.zeros((data.shape))
+    hw_prediction = np.zeros(data.shape)
 
     for hour in range(24):
         hw_prediction[360*24+hour::24, 2] = hw_method(data[hour::24, 2])
 
-    plt.plot(np.arange(0, len(actual), 1), actual, label='actual')
-    plt.plot(np.arange(360*24, hw_prediction.shape[0], 1), hw_prediction[360*24:, 2], label='prediction')
-    plt.title('Predykcja metodą Holta-Wintersa')
-    plt.xlabel('Czas')
-    plt.ylabel('Wartość')
-    plt.legend(loc='best', frameon=False)
-    plt.show()
-
-    print_rate(hw_prediction[360*24:, 2], data[360*24:, 2], "Holt-Winters method")
+    print_rate(hw_prediction[360 * 24:, 2], data[360 * 24:, 2], "Holt-Winters method")
+    plot_prognosis(hw_prediction[360*24:, 2], actual, "Holt-Winters method")
+    plot_score(hw_prediction[360 * 24:, 2], actual[360 * 24:], 'metody Holta-Wintersa')
