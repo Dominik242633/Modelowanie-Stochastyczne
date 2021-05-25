@@ -2,6 +2,7 @@ import numpy as np
 from dmtest import dmtest
 from scipy.stats import norm
 import matplotlib.pyplot as plt
+from matplotlib import cm
 import zad4
 import zad5
 import zad6
@@ -38,6 +39,8 @@ def plot_heatmap(pvals, title):
     im = ax.imshow(pvals, interpolation='none', vmin=0, vmax=1, aspect='equal')
     plt.colorbar(im)
     plt.title(title)
+    current_cmap = cm.get_cmap()
+    current_cmap.set_bad(color='black')
     ax.set_xticks(np.arange(0, 5, 1))
     ax.set_yticks(np.arange(0, 5, 1))
     ax.set_xticklabels(['Naive', 'HW', 'Constant ARX', 'Expanded ARX', 'Rolled ARX'])
@@ -46,7 +49,10 @@ def plot_heatmap(pvals, title):
     plt.grid(None)
     for i in range(pvals.shape[0]):
         for j in range(pvals.shape[1]):
-            text = ax.text(j, i, round(pvals[i, j], 3), ha="center", va="center", color="w")
+            if not np.isnan(pvals[i, j]):
+                text = ax.text(j, i, round(pvals[i, j], 3), ha="center", va="center", color="w")
+            if i == j:
+                text = ax.text(j, i, 'X', ha="center", va="center", color="w", fontsize=20.0)
 
     fig.tight_layout()
     plt.show()
@@ -60,13 +66,19 @@ if __name__ == "__main__":
     errors_hour = [prognosis_error[8::24] for prognosis_error in errors_hour]
     errors_day = [[np.mean(prognosis_error[i*24:i*24+24]) for i in range(722)] for prognosis_error in errors_day]
 
-    pvals = np.zeros((5, 5))
+    pvals = np.eye(5)
 
     for index1, error1 in enumerate(errors_hour):
         for index2, error2 in enumerate(errors_hour):
             if index1 != index2:
                 DM = dmtest(error1, error2, lossf='SE')
-                pvals[index1, index2] = 1 - norm.cdf(DM)
+                pval = 1 - norm.cdf(DM)
+                if pval < 0.2:
+                    pvals[index1, index2] = 1 - norm.cdf(DM)
+                else:
+                    pvals[index1, index2] = None
+            else:
+                pvals[index1, index2] = None
 
     plot_heatmap(pvals, "Test Diebolda-Mariano dla godziny 8")
 
@@ -74,6 +86,10 @@ if __name__ == "__main__":
         for index2, error2 in enumerate(errors_day):
             if index1 != index2:
                 DM = dmtest(error1, error2, lossf='AE')
-                pvals[index1, index2] = 1 - norm.cdf(DM)
+                pval = 1 - norm.cdf(DM)
+                if pval < 0.2:
+                    pvals[index1, index2] = pval
+                else:
+                    pvals[index1, index2] = None
 
     plot_heatmap(pvals, "Test Diebolda-Mariano dla średnich dziennych")

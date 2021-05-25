@@ -18,7 +18,7 @@ if __name__ == "__main__":
     y_naive_prediction = np.array(naive_prediction(actual_naive))
 
     print_rate(y_naive_prediction, actual[360 * 24:], "Naive method")
-    plot_prognosis(y_naive_prediction, actual, "Naive method")
+    plot_prognosis(y_naive_prediction, actual, "naiwną")
     plot_score(y_naive_prediction, actual[360*24:], 'metody naiwnej')
 
     hw_prediction = np.zeros(data.shape)
@@ -27,20 +27,20 @@ if __name__ == "__main__":
         hw_prediction[360*24+hour::24, 2] = hw_method(data[hour::24, 2])
 
     print_rate(hw_prediction[360 * 24:, 2], data[360 * 24:, 2], "Holt-Winters method")
-    plot_prognosis(hw_prediction[360*24:, 2], actual, "Holt-Winters method")
+    plot_prognosis(hw_prediction[360*24:, 2], actual, "Holta-Wintersa")
     plot_score(hw_prediction[360 * 24:, 2], actual[360*24:], 'metody Holta-Wintersa')
 
     prediction = predict(data, Ndays=776)
-    plot_prognosis(prediction, actual, 'stałego, 360-dniowego okna kalibracji')
+    plot_prognosis(prediction, actual, 'AEX dla stałego, 360-dniowego okna kalibracji')
     print_rate(prediction, actual[360*24:], 'ARX - 360-dniowe okno kalibracji')
     plot_score(prediction, actual[360*24:], 'ARX z stałym 360-dniowym oknem')
 
     prediction = zad6.predict(data, Ndays=776)
-    plot_prognosis(prediction, actual, 'rozszerzanego okna kalibracji')
+    plot_prognosis(prediction, actual, 'ARX dla rozszerzanego okna kalibracji')
     print_rate(prediction, actual[360*24:], 'ARX - rozszerzane okno kalibracji')
     plot_score(prediction, actual[360*24:], 'ARX z rozszerzanym oknem')
 
     prediction = zad7.predict(data, Ndays=776)
-    plot_prognosis(prediction, actual, 'rolowanego okna kalibracji')
+    plot_prognosis(prediction, actual, 'ARX dla rolowanego okna kalibracji')
     print_rate(prediction, actual[360*24:], 'ARX - rolowane okno kalibracji')
     plot_score(prediction, actual[360*24:], 'ARX z rolowanym oknem')

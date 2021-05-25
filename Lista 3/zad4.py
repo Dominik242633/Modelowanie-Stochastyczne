@@ -13,7 +13,6 @@ def naive_prediction(actual):
             prediction.append(actual[i-7*24, 2])
         else:
             prediction.append(actual[i-24, 2])
-
     return prediction
 
 
@@ -35,7 +34,7 @@ if __name__ == "__main__":
     y_naive_prediction = np.array(naive_prediction(data))
 
     print_rate(y_naive_prediction, actual[360 * 24:], "Naive method")
-    plot_prognosis(y_naive_prediction, actual, "Naive method")
+    plot_prognosis(y_naive_prediction, actual, "naiwną")
     plot_score(y_naive_prediction, actual[360 * 24:], 'metody naiwnej')
 
     hw_prediction = np.zeros(data.shape)
@@ -44,5 +43,5 @@ if __name__ == "__main__":
         hw_prediction[360*24+hour::24, 2] = hw_method(data[hour::24, 2])
 
     print_rate(hw_prediction[360 * 24:, 2], data[360 * 24:, 2], "Holt-Winters method")
-    plot_prognosis(hw_prediction[360*24:, 2], actual, "Holt-Winters method")
+    plot_prognosis(hw_prediction[360*24:, 2], actual, "Holta-Wintersa")
     plot_score(hw_prediction[360 * 24:, 2], actual[360 * 24:], 'metody Holta-Wintersa')

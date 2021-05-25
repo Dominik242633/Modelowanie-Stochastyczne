@@ -70,3 +70,18 @@ if __name__ == "__main__":
         plt.xlabel('Dzień tygodnia')
         plt.ylabel(f'{prognosis_name}')
         plt.show()
+
+    # Zadanie 2a
+    plt.scatter(data[:, 2], data[:, 3])
+    plt.title("$P_d$$_,$$_h$ vs $Z_d$$_,$$_h$")
+    plt.xlabel('$P_d$$_,$$_h$', fontdict={'size': 16})
+    plt.ylabel('$Z_d$$_,$$_h$', fontdict={'size': 16})
+    plt.show()
+
+    # Zadanie 2b
+    for i in range(1, 10):
+        plt.scatter(data[:len(data)-i*24:4, 2], data[i*24::4, 2])
+        plt.title(f'k = {i}')
+        plt.xlabel('$P_d$$_,$$_h$', fontdict={'size': 16})
+        plt.ylabel('$P_d$$_-$$_k$$_,$$_h$', fontdict={'size': 16})
+        plt.show()
