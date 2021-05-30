@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from zad1 import predict
 
 
@@ -19,17 +18,17 @@ def coverage(actual, predicted):
 
     naive_error = actual - predicted
 
-    PI50[:, 0] = naive_prognosis + np.percentile(naive_error, 25)
-    PI50[:, 1] = naive_prognosis + np.percentile(naive_error, 75)
+    PI50[:, 0] = predicted + np.percentile(naive_error, 25)
+    PI50[:, 1] = predicted + np.percentile(naive_error, 75)
     cover50 = np.array(
         [(actual[index] > element[0]) and (actual[index] < element[1]) for index, element in enumerate(PI50)])
 
-    PI90[:, 0] = naive_prognosis + np.percentile(naive_error, 5)
-    PI90[:, 1] = naive_prognosis + np.percentile(naive_error, 95)
+    PI90[:, 0] = predicted + np.percentile(naive_error, 5)
+    PI90[:, 1] = predicted + np.percentile(naive_error, 95)
     cover90 = np.array(
         [(actual[index] > element[0]) and (actual[index] < element[1]) for index, element in enumerate(PI90)])
 
-    return [np.sum(cover50), np.sum(cover90)]
+    return [cover50, cover90]
 
 
 if __name__ == "__main__":
@@ -42,7 +41,6 @@ if __name__ == "__main__":
     naive_coverage50, naive_coverage90 = coverage(actual, naive_prognosis)
 
     print("Prognoza naiwna")
-    print(np.sum(naive_coverage50), np.sum(naive_coverage90))
     print(f"50% przedział - pokrycie: {round(100*np.sum(naive_coverage50)/actual.shape[0], 2)}%")
     print(f"90% przedział - pokrycie: {round(100*np.sum(naive_coverage90)/actual.shape[0], 2)}%")
 
