@@ -3,6 +3,7 @@ from christof import christof
 from zad1 import predict
 from zad5 import naive_prediction, coverage
 from datetime import datetime
+np.seterr(all="ignore")
 
 
 if __name__ == "__main__":
@@ -15,30 +16,44 @@ if __name__ == "__main__":
 
     actual = data[360*24:, 2]
 
-    naive_coverage50, naive_coverage90 = coverage(actual, naive_prognosis)
+    print("Prognoza naiwna\n\t\t50%\t\t90%")
+    for i in range(24):
+        naive_coverage50, naive_coverage90 = coverage(actual[i::24], naive_prognosis[i::24])
 
-    print("Prognoza naiwna")
-    print(f"50% przedział - pokrycie: {round(100*np.sum(naive_coverage50)/actual.shape[0], 2)}%")
-    print(f"90% przedział - pokrycie: {round(100*np.sum(naive_coverage90)/actual.shape[0], 2)}%")
+        print(f"Hour {i}: {round(100*np.sum(naive_coverage50)/naive_coverage50.shape[0], 2)}%\t"
+              f"{round(100*np.sum(naive_coverage90)/naive_coverage90.shape[0], 2)}%")
+
+    print("\t\t\t\t\t\tNaive prognosis")
+    print("\t\t\t\t50%\t\t\t\t\t\t\t90%")
+    print("\t\tUC\t\tInd\t\tCC\t\t||\tUC\t\tInd\t\tCC")
 
     for i in range(24):
-        LR_uc_n5, LR_i_n5, LR_cc_n5, LR_uc_p_n5, LR_i_p_n5, LR_cc_p_n5 = christof(naive_coverage50[i::24], 0.5)
-        print(f'Naive {i}h for 50% PI - UC={round(LR_uc_p_n5, 2)}, Ind={round(LR_i_p_n5, 2)}, CC={round(LR_cc_p_n5, 2)}')
+        naive_coverage50, naive_coverage90 = coverage(actual[i::24], naive_prognosis[i::24])
 
-        LR_uc_n9, LR_i_n9, LR_cc_n9, LR_uc_p_n9, LR_i_p_n9, LR_cc_p_n9 = christof(naive_coverage90[i::24], 0.9)
-        print(f'Naive {i}h for 90% PI - UC={round(LR_uc_p_n9, 2)}, Ind={round(LR_i_p_n9, 2)}, CC={round(LR_cc_p_n5, 2)}\n')
+        LR_uc_n5, LR_i_n5, LR_cc_n5, LR_uc_p_n5, LR_i_p_n5, LR_cc_p_n5 = christof(naive_coverage50, 0.5)
+        LR_uc_n9, LR_i_n9, LR_cc_n9, LR_uc_p_n9, LR_i_p_n9, LR_cc_p_n9 = christof(naive_coverage90, 0.9)
+
+        print(f'Hour {i}\t{LR_uc_p_n5:.2f}\t{LR_i_p_n5:.2f}\t{LR_cc_p_n5:.2f}\t||\t'
+              f'{LR_uc_p_n9:.2f}\t{LR_i_p_n9:.2f}\t{LR_cc_p_n9:.2f}')
 
     arx_prognosis = np.array(predict(data, Ndays=776))
 
-    arx_coverage50, arx_coverage90 = coverage(actual, arx_prognosis)
+    print("Prognoza ARX\n\t\t50%\t\t90%")
+    for i in range(24):
+        arx_coverage50, arx_coverage90 = coverage(actual[i::24], arx_prognosis[i::24])
 
-    print("Prognoza ARX")
-    print(f"50% przedział - pokrycie: {round(100*np.sum(arx_coverage50)/actual.shape[0], 2)}%")
-    print(f"90% przedział - pokrycie: {round(100*np.sum(arx_coverage90)/actual.shape[0], 2)}%")
+        print(f"Hour {i}: {round(100*np.sum(arx_coverage50)/arx_coverage50.shape[0], 2)}%\t"
+              f"{round(100*np.sum(arx_coverage90)/arx_coverage90.shape[0], 2)}%")
+
+    print("\n\t\t\t\t\t\tARX prognosis")
+    print("\t\t\t\t50%\t\t\t\t\t\t\t90%")
+    print("\t\tUC\t\tInd\t\tCC\t\t||\tUC\t\tInd\t\tCC")
 
     for i in range(24):
-        LR_uc_n5, LR_i_n5, LR_cc_n5, LR_uc_p_n5, LR_i_p_n5, LR_cc_p_n5 = christof(arx_coverage50[i::24], 0.5)
-        print(f'ARX {i}h for 50% PI - UC={round(LR_uc_p_n5, 2)}, Ind={round(LR_i_p_n5, 2)}, CC={round(LR_cc_p_n5, 2)}')
+        arx_coverage50, arx_coverage90 = coverage(actual[i::24], arx_prognosis[i::24])
 
-        LR_uc_n9, LR_i_n9, LR_cc_n9, LR_uc_p_n9, LR_i_p_n9, LR_cc_p_n9 = christof(arx_coverage90[i::24], 0.9)
-        print(f'ARX {i}h for 90% PI - UC={round(LR_uc_p_n9, 2)}, Ind={round(LR_i_p_n9, 2)}, CC={round(LR_cc_p_n5, 2)}\n')
+        LR_uc_n5, LR_i_n5, LR_cc_n5, LR_uc_p_n5, LR_i_p_n5, LR_cc_p_n5 = christof(arx_coverage50, 0.5)
+        LR_uc_n9, LR_i_n9, LR_cc_n9, LR_uc_p_n9, LR_i_p_n9, LR_cc_p_n9 = christof(arx_coverage90, 0.9)
+
+        print(f'Hour {i}\t{LR_uc_p_n5:.2f}\t{LR_i_p_n5:.2f}\t{LR_cc_p_n5:.2f}\t||\t'
+              f'{LR_uc_p_n9:.2f}\t{LR_i_p_n9:.2f}\t{LR_cc_p_n9:.2f}')

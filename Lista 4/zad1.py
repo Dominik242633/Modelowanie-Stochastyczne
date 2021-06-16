@@ -64,7 +64,6 @@ if __name__ == "__main__":
     max_window = 361
 
     for i in range(min_window, max_window):
-        print(i)
         predicted = np.array(predict(data, startd=360-i, endd=360))
         difference = np.array(actual[360 * 24:]) - predicted
         score.append(np.array([np.mean(np.abs(difference)), np.sqrt(np.mean(difference**2))]))
@@ -75,7 +74,6 @@ if __name__ == "__main__":
 
     y = np.loadtxt('zad1_scores.txt')
     z = np.loadtxt('zad1_errors.txt')
-    print(z.shape)
 
     plt.scatter(np.arange(min_window, max_window, 1), y[:, 0], label='MAE')
     set_plot_properties('MAE w zależności od długości okna kalibracji', 'Długość okna w dniach', 'MAE')
